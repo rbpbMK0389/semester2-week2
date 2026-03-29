@@ -9,3 +9,17 @@
 
 -- Results should be ordered by the number of tickets sold, from highest to lowest.
 
+SELECT screenings.screening_id, films.title, COUNT(tickets.ticket_id) AS ticket_count
+
+FROM screenings
+
+JOIN films ON screenings.film_id = films.film_id
+
+JOIN tickets ON screenings.screening_id = tickets.screening_id
+
+GROUP BY screenings.screening_id, films.title
+
+ORDER BY ticket_count DESC
+
+
+;

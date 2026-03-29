@@ -36,10 +36,10 @@ ORDER BY films.title
 
     """
 
-
+    result_list = []
     cursor = conn.execute(query, (customer_id, ))
     results = cursor.fetchall()
-
+    
     return results
 
 
@@ -53,7 +53,29 @@ def screening_sales(conn):
     Include all screenings, even if tickets_sold is 0.
     Order results by tickets_sold descending.
     """
-    pass
+    
+    query = """
+SELECT screenings.screening_id, films.title, COUNT(tickets.ticket_id) AS ticket_count
+
+FROM screenings
+
+JOIN films ON screenings.film_id = films.film_id
+
+JOIN tickets ON screenings.screening_id = tickets.screening_id
+
+GROUP BY screenings.screening_id, films.title
+
+ORDER BY ticket_count DESC
+
+
+;
+
+    """
+
+    cursor = conn.execute(query)
+    results = cursor.fetchall()
+
+    return results
 
 
 def top_customers_by_spend(conn, limit):
