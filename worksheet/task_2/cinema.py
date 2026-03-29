@@ -61,7 +61,7 @@ FROM screenings
 
 JOIN films ON screenings.film_id = films.film_id
 
-JOIN tickets ON screenings.screening_id = tickets.screening_id
+LEFT JOIN tickets ON screenings.screening_id = tickets.screening_id
 
 GROUP BY screenings.screening_id, films.title
 
@@ -88,4 +88,24 @@ def top_customers_by_spend(conn, limit):
     Order by total_spent descending.
     Limit the number of rows returned to `limit`.
     """
-    pass
+
+    query = """
+SELECT customers.customer_name, SUM(tickets.price) AS total_price
+
+FROM customers
+
+JOIN tickets ON customers.customer_id = tickets.customer_id
+
+GROUP BY customers.customer_name
+
+ORDER BY total_price DESC, customers.customer_name
+
+LIMIT ?
+;
+
+"""
+
+    cursor = conn.execute(query, (limit,))
+    results = cursor.fetchall()
+
+    return results

@@ -15,7 +15,7 @@ FROM screenings
 
 JOIN films ON screenings.film_id = films.film_id
 
-JOIN tickets ON screenings.screening_id = tickets.screening_id
+LEFT JOIN tickets ON screenings.screening_id = tickets.screening_id
 
 GROUP BY screenings.screening_id, films.title
 
